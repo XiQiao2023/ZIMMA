@@ -1,0 +1,13 @@
+Package: ZIMMA
+Title: Decoding Microbiome Dual Mediation
+Version: 0.1.0
+Authors@R: 
+    person("Xi", "Qiao", , "kathyqiao87@gmail.com", role = c("aut", "cre"))
+Description: Given the complex interactions between the microbiome, the host, and external factors, causal mediation analysis is essential for unraveling how dysbiosis or microbial imbalance mediates the effects of interventions or environmental exposures on health outcomes. However, zero inflation in microbiome count data complicates high-dimensional mediation analysis, as frequently employed zero-inflated models often struggle to distinguish true zero inflation from the underlying count distribution. To address this, we employ a zero-inflated negative binomial distribution for each mediator within a Bayesian framework, incorporating spike-and-slab priors to enable sparsity in estimating natural indirect effects (NIE) and an informative prior based on nonzero counts to improve dispersion estimation and control zero sources. Recognizing the distinct biological mechanisms underlying microbial presence versus abundance, we developed a dual mediation model, ZIMMA, to separate the NIE into pathways for mediator abundance and prevalence. Extensive simulations demonstrate ZIMMA's superior performance in capturing distinct mediation mechanisms for both rare and abundant species compared to existing methods. Its application to human microbiome studies examining the effects of dietary intake and metabolic syndrome underscores its efficacy in identifying key microbial mediators, offering valuable insights and biological interpretation into the role of the microbiome in disease physiology and health sciences.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
