@@ -3,5 +3,5 @@
 export(GMPR)
 export(ZIMMA)
 export(ZIMMA.summary)
-export(add_two)
+import(coda)
 import(matrixStats)

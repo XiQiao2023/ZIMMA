@@ -13,3 +13,6 @@ Suggests:
 Config/testthat/edition: 3
 URL: https://github.com/XiQiao2023/ZIMMA
 BugReports: https://github.com/XiQiao2023/ZIMMA/issues
+Depends: 
+    R (>= 3.5)
+LazyData: true

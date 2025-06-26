@@ -6,6 +6,7 @@
 #' @return The parameter's posterior inclusion probability, mean, median, highest posterior density.
 #' @examples
 #' ZIMMA.summary(posterior_list)
+#' @import coda
 #' @export
 ZIMMA.summary = function(ZIMMA.pos = posterior_list){
   nP = dim(ZIMMA.pos$pos_beta)[3]

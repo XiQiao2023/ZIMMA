@@ -39,32 +39,70 @@ devtools::install_github("XiQiao2023/ZIMMA")
 
 ## Load the Phyloseq Object
 
-This is a basic example which shows you how to solve a common problem:
-
 ``` r
 library(ZIMMA)
+
+data("Hema_physeq")
+Hema_physeq
+#> Loading required package: phyloseq
+#> phyloseq-class experiment-level object
+#> otu_table()   OTU Table:         [ 3911 taxa and 256 samples ]
+#> sample_data() Sample Data:       [ 256 samples by 36 sample variables ]
+#> tax_table()   Taxonomy Table:    [ 3911 taxa by 6 taxonomic ranks ]
+
+## Data filtering
+M <- as.data.frame(t(Hema_physeq@otu_table))
+M <- M[, colMeans(M != 0) > 0.01] # Prevalence > 1%
+
+# Count the number of unique features at each taxonomic level
+taxa_to_keep <- colnames(M)
+physeq_filtered <- prune_taxa(taxa_to_keep, Hema_physeq)
+taxa_table_filtered <- tax_table(physeq_filtered)
+apply(taxa_table_filtered, 2, function(x) length(unique(x[!is.na(x)])))
+#> Kingdom  Phylum   Class   Order  Family   Genus 
+#>       3      13      19      31      58     207
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+## Apply the dual mediation framework
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+Hema_Phylum_Result = ZIMMA(object = physeq_filtered, 
+               Outcome = "log_BC", 
+               Treat = "Drug_piperacillinOrtazobactam_Prior_Use", 
+               C.med = c("HCTSource","Disease",
+                         "Drug_ciprofloxacin_Prior_Use",
+                         "Drug_ganciclovir_Prior_Use"), 
+               C.out =  c("HCTSource","Disease",
+                          "Drug_ciprofloxacin_Prior_Use",
+                          "Drug_ganciclovir_Prior_Use",
+                          "Drug_imipenem_cilastatin_Post_Use",
+                          "Drug_piperacillinOrtazobactam_Post_Use",
+                          "Drug_atovaquone_Post_Use",
+                          "Drug_isavuconazonium_sulfate_Post_Use",
+                          "Drug_meropenem_Post_Use"), 
+               M.level = "Phylum",
+               n_iter = 20000, burn_in = 5000,
+               Size = "RLEpseudo", pseudo = 0.5)
+
+save(Hema_Phylum_Result,file = "Hema_Phylum_Result.rda")
 ```
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this.
+## Check the results
 
-You can also embed plots, for example:
+``` r
+sum = ZIMMA.summary(Hema_Phylum_Result)
 
-<img src="man/figures/README-pressure-1.png" width="100%" />
+NIE.A = which(sum$betaT[,1]>0.5 & sum$alphaM[,1]>0.5) 
+sum$betaT[NIE.A,, drop = FALSE]
+#>                     PIP      mean    median HPD.Lower HPD.Upper
+#> <not present> 0.9548667 -2.175247 -2.172305 -3.354904 -1.178494
+sum$alphaM[NIE.A,,drop = FALSE]
+#>                     PIP      Mean    Median   HPD.Lower HPD.Upper
+#> <not present> 0.5874667 0.1178958 0.1155591 -0.02453327 0.3099058
 
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
+NIE.P = which(sum$gammaT[,1]>0.5 & sum$alphaM[,1]>0.5)
+sum$gammaT[NIE.P,,drop = FALSE]
+#>      PIP mean median HPD.Lower HPD.Upper
+sum$alphaM[NIE.P,,drop = FALSE]
+#>      PIP Mean Median HPD.Lower HPD.Upper
+```
