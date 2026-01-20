@@ -46,5 +46,18 @@ This function performs Bayesian dual mediation analysis for microbiome data, acc
 It models both prevalence and abundance components of each microbial feature to identify mediators of treatment effects on outcomes.
 }
 \examples{
-ZIMMA(object = physeq, Outcome = Outcome, Treat = Treat, C.med = NULL, C.out = NULL, M.level = M.level,n_iter = 100, burn_in = 20,Size = "RLEpseudo", pseudo = 0.)
+\dontrun{
+ZIMMA(
+  object = physeq,
+  Outcome = Outcome,
+  Treat = Treat,
+  C.med = NULL,
+  C.out = NULL,
+  M.level = M.level,
+  n_iter = 100,
+  burn_in = 20,
+  Size = "RLEpseudo",
+  pseudo = 0
+)
+}
 }

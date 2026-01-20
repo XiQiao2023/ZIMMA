@@ -16,23 +16,46 @@
 #'
 #' @return A list containing parameter posterior samples, and the phyloseq object.
 #' @examples
-#' ZIMMA(object = physeq, Outcome = Outcome, Treat = Treat, C.med = NULL, C.out = NULL, M.level = M.level,n_iter = 100, burn_in = 20,Size = "RLEpseudo", pseudo = 0.)
+#' \dontrun{
+#' ZIMMA(
+#'   object = physeq,
+#'   Outcome = Outcome,
+#'   Treat = Treat,
+#'   C.med = NULL,
+#'   C.out = NULL,
+#'   M.level = M.level,
+#'   n_iter = 100,
+#'   burn_in = 20,
+#'   Size = "RLEpseudo",
+#'   pseudo = 0
+#' )
+#' }
+#' @importFrom phyloseq tax_glom sample_data tax_table
+#' @importFrom MASS glm.nb mvrnorm
+#' @importFrom BayesLogit rpg
+#' @importFrom invgamma rinvgamma
+#' @importFrom stats dgamma dnbinom dnorm glm.control median model.matrix quantile
+#' @importFrom stats rbeta rbinom rnorm runif sd
 #' @export
 ZIMMA = function(object = physeq, Outcome = Outcome, Treat = Treat,
                  C.med = NULL, C.out = NULL, M.level = M.level,
                  n_iter = 100, burn_in = 20,Size = "RLEpseudo", pseudo = 0.5){
 
-  physeq_level = tax_glom(object,taxrank = M.level)
-  metadata = sample_data(physeq_level)
+  if (M.level == "OTU") {
+    physeq_level <- object
+  } else {
+    physeq_level <- tax_glom(object, taxrank = M.level)
+  }
+  metadata = as(sample_data(physeq_level), "data.frame")
 
   Treat <- metadata[[Treat]]
   Y <- metadata[[Outcome]]
+  M = as.matrix(as.data.frame(t(physeq_level@otu_table)))
+
   C.med_df <- metadata[, C.med, drop = FALSE]
   C.med_df <- data.frame(C.med_df)
   C.out_df <- metadata[, C.out, drop = FALSE]
   C.out_df <- data.frame(C.out_df)
-  M = as.matrix(as.data.frame(t(physeq_level@otu_table)))
-
 
   # Design matrix
   if (ncol(C.med_df) == 0) {

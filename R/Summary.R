@@ -5,7 +5,9 @@
 #' @param ZIMMA.pos The output from ZIMMA.
 #' @return The parameter's posterior inclusion probability, mean, median, highest posterior density.
 #' @examples
+#' \dontrun{
 #' ZIMMA.summary(posterior_list)
+#' }
 #' @import coda
 #' @export
 ZIMMA.summary = function(ZIMMA.pos = posterior_list){

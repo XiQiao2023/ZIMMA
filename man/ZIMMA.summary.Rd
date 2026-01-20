@@ -16,5 +16,7 @@ The parameter's posterior inclusion probability, mean, median, highest posterior
 This function summarizes the posterior results from ZIMMA.
 }
 \examples{
+\dontrun{
 ZIMMA.summary(posterior_list)
+}
 }
