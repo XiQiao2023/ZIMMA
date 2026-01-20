@@ -29,11 +29,27 @@ syndrome underscores its efficacy in identifying key microbial
 mediators, offering valuable insights and biological interpretation into
 the role of the microbiome in disease physiology and health sciences.
 
+## Dependencies
+
+This package depends on the Bioconductor package `phyloseq`.
+
+Please install it using **BiocManager**:
+
+```r
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+BiocManager::install("phyloseq")
+```
+
 ## Installation
 
 You can install the development version of ZIMMA like so:
 
 ``` r
+if (!requireNamespace("devtools", quietly = TRUE))
+  install.packages("devtools")
+
 devtools::install_github("XiQiao2023/ZIMMA")
 ```
 
